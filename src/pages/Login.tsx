@@ -51,19 +51,22 @@ const GoogleLoginButton = styled.button`
   border: 0.1em solid rgba(255, 255, 255, 0.5);
   color: rgb(255, 255, 255);
   &:hover {
-    opacity:0.8;
-    background: rgba(255, 255, 255, 0.08)
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.08);
   }
-
 `;
 
-function Login() {
+type LoginProps = {
+  handleSignIn: () => void;
+};
+
+function Login({ handleSignIn }: LoginProps) {
   return (
     <LoginPageRoot>
       <LoginBox>
         <LoginTitle>Charmr</LoginTitle>
         <LoginSection>
-          <GoogleLoginButton>
+          <GoogleLoginButton onClick={handleSignIn}>
             <FcGoogle />
             Sign in With Google
           </GoogleLoginButton>

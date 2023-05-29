@@ -13,8 +13,14 @@ align-items: center;
 color: white;`
 
 
-function Home() {
-  return <HomeRoot>Home</HomeRoot>;
+type HomeProps = {
+  handleSignOut : ()=>void
+}
+
+function Home({handleSignOut}:HomeProps) {
+  return <HomeRoot>Home
+    <button onClick={handleSignOut}>Logout</button>
+  </HomeRoot>;
 }
 
 export default Home;
