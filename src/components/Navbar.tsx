@@ -21,7 +21,7 @@ const NavbarToggle = styled.div`
   width: 100%;
   justify-content: center;
   align-items: center;
-  background: #ffffff83;
+  background: rgba(255, 255, 255, 0.441);
   &:hover {
     background: #fffffff5;
   }
@@ -41,7 +41,7 @@ const NavbarListItem = styled.div`
   justify-content: center;
   align-items: center;
   padding: 10px 0 10px 0;
-  background: #ffffff83;
+  background: rgba(255, 255, 255, 0.441);
   &:hover {
     background: #ffffffd1;
   }
