@@ -10,7 +10,7 @@ import {
 } from "firebase/auth";
 
 import Login from "./pages/Login";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import Home from "./pages/Home";
 
 const firebaseapp = initializeApp({
@@ -25,8 +25,17 @@ const firebaseapp = initializeApp({
 const auth = getAuth(firebaseapp);
 const provider = new GoogleAuthProvider();
 
+export const GlobalContext = createContext<any>(null);
+
+export type globalContextTypes = {
+  handleSignOut: () => void;
+  navBarOpen: boolean;
+  setnavBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [navBarOpen, setnavBarOpen] = useState(false);
 
   const handleSignIn = () => {
     signInWithPopup(auth, provider)
@@ -47,8 +56,16 @@ function App() {
         console.log(error);
       });
   };
-
-  return <>{user ? <Home handleSignOut={handleSignOut} /> : <Login handleSignIn={handleSignIn} />}</>;
+  const globalContextValues: globalContextTypes = {
+    handleSignOut: handleSignOut,
+    navBarOpen: navBarOpen,
+    setnavBarOpen: setnavBarOpen,
+  };
+  return (
+    <GlobalContext.Provider value={globalContextValues}>
+      {user ? <Home /> : <Login handleSignIn={handleSignIn} />}
+    </GlobalContext.Provider>
+  );
 }
 
 export default App;

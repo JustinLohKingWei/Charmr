@@ -32,6 +32,7 @@ const LoginTitle = styled.div`
   font-size: 2em;
   height: 50%;
   align-items: center;
+  font-family: "comic-sans";
 `;
 
 const LoginSection = styled.div`
@@ -72,7 +73,7 @@ function Login({ handleSignIn }: LoginProps) {
           </GoogleLoginButton>
         </LoginSection>
         <LoginSection>
-          New here? Sign up with your google account !
+          Sign up for Charmr today!
         </LoginSection>
       </LoginBox>
     </LoginPageRoot>
