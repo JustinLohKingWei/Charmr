@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import Message from "./Message";
+import { realTestConvo } from "../../data/messageData";
 
 const ChatBoxRoot = styled.div`
   display: flex;
@@ -17,6 +19,8 @@ const ChatDisplay = styled.div`
   border: 0.1em solid rgba(255, 255, 255, 0.5);
   margin: 1em 0 1em 0;
   background: rgba(255, 255, 255, 0.141);
+  overflow-y: auto;
+  flex-direction: column;
 `;
 
 const ChatInput = styled.div`
@@ -27,19 +31,25 @@ const ChatInput = styled.div`
 `;
 
 const InputBox = styled.input`
-  display:flex;
-  height:100%;
-  width:100%;
+  display: flex;
+  height: 100%;
+  width: 100%;
   background: rgba(255, 255, 255, 0.141);
   font-size: 1em;
-`
+`;
 
 function ChatBox() {
   return (
     <ChatBoxRoot>
-      <ChatDisplay />
+      <ChatDisplay>
+        {realTestConvo.map((data)=>{
+          return(
+            <Message isUser={data.isUser} message={data.message}/>
+          )
+        })}
+      </ChatDisplay>
       <ChatInput>
-        <InputBox/>
+        <InputBox />
       </ChatInput>
     </ChatBoxRoot>
   );
