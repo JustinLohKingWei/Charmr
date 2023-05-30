@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import Contact from "./Contact";
+import { testContactList } from "../data/ContactData";
 
 const ChatListRoot = styled.div`
   display: flex;
@@ -11,21 +13,12 @@ const ChatListRoot = styled.div`
   align-items:center;
 `;
 
-const ChatListItem = styled.div`
-  display: flex;
-  height: 6em;
-  width: 90%;
-  border: 0.1em solid rgba(255, 255, 255, 0.5);
-`;
-
 function ChatList() {
   return (
     <ChatListRoot>
-      <ChatListItem />
-      <ChatListItem />
-      <ChatListItem />
-      <ChatListItem />
-      <ChatListItem />
+      {testContactList.map((data)=>{
+        return (<Contact name={data.name}/>)
+      })}
     </ChatListRoot>
   );
 }

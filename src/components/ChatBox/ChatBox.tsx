@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import Message from "./Message";
-import { realTestConvo } from "../../data/messageData";
-
+import { realTestConvo } from "../../data/MessageData";
 const ChatBoxRoot = styled.div`
   display: flex;
   height: 95%;
