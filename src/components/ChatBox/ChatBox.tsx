@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Message from "./Message";
 import { realTestConvo } from "../../data/MessageData";
+import { useRef, useState } from "react";
 const ChatBoxRoot = styled.div`
   display: flex;
   height: 95%;
@@ -38,17 +39,44 @@ const InputBox = styled.input`
 `;
 
 function ChatBox() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [currentMessage, setCurrentMessage] = useState("");
+
+  const handleSubmit = () => {
+    alert(currentMessage);
+  };
+
+  const handleBlur = () => {
+    setCurrentMessage("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
   return (
     <ChatBoxRoot>
       <ChatDisplay>
-        {realTestConvo.map((data)=>{
-          return(
-            <Message isUser={data.isUser} message={data.message}/>
-          )
+        {realTestConvo.map((data) => {
+          return <Message isUser={data.isUser} message={data.message} />;
         })}
       </ChatDisplay>
       <ChatInput>
-        <InputBox />
+        <InputBox
+          ref={inputRef}
+          type="text"
+          placeholder="Type Your Message here"
+          onChange={(e) => {
+            setCurrentMessage(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit();
+            }
+          }}
+          onBlur={() => {
+            handleBlur();
+          }}
+        />
       </ChatInput>
     </ChatBoxRoot>
   );

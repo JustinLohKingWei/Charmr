@@ -10,14 +10,14 @@ const ChatListRoot = styled.div`
   background: transparent;
   border: 0.1em solid rgba(255, 255, 255, 0.5);
   padding: 1em 0 1em 0;
-  align-items:center;
+  align-items: center;
 `;
 
 function ChatList() {
   return (
     <ChatListRoot>
-      {testContactList.map((data)=>{
-        return (<Contact name={data.name}/>)
+      {testContactList.map((data) => {
+        return <Contact name={data.name} />;
       })}
     </ChatListRoot>
   );

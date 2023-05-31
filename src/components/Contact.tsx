@@ -7,6 +7,9 @@ const ContactRoot = styled.div`
   width: 90%;
   border: 0.1em solid rgba(255, 255, 255, 0.5);
   align-items: center;
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
 `;
 
 const ContactImage = styled.div`
