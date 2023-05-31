@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import {
   getAuth,
   signInWithPopup,
@@ -22,8 +22,9 @@ const firebaseapp = initializeApp({
   appId: "1:803361647764:web:2e0db27cb4fe89cd77d881",
   measurementId: "G-67X7V1ZRJF",
 });
-const auth = getAuth(firebaseapp);
-const provider = new GoogleAuthProvider();
+export const auth = getAuth(firebaseapp);
+export const provider = new GoogleAuthProvider();
+export const db = getFirestore(firebaseapp);
 
 export const GlobalContext = createContext<any>(null);
 
@@ -31,11 +32,14 @@ export type globalContextTypes = {
   handleSignOut: () => void;
   navBarOpen: boolean;
   setnavBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  maskerDisplay: boolean;
+  setmaskerDisplay: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [navBarOpen, setnavBarOpen] = useState(false);
+  const [maskerDisplay, setmaskerDisplay] = useState(true);
 
   const handleSignIn = () => {
     signInWithPopup(auth, provider)
@@ -60,6 +64,8 @@ function App() {
     handleSignOut: handleSignOut,
     navBarOpen: navBarOpen,
     setnavBarOpen: setnavBarOpen,
+    maskerDisplay:maskerDisplay,
+    setmaskerDisplay:setmaskerDisplay,
   };
   return (
     <GlobalContext.Provider value={globalContextValues}>
