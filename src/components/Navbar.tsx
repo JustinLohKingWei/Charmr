@@ -6,6 +6,7 @@ import { GrLogout, GrSettingsOption } from "react-icons/gr";
 import { FiUser } from "react-icons/fi";
 import ProfileModal from "./Modals/ProfileModal";
 import Modal from "./Modals/Modal";
+import SettingsModal from "./Modals/SettingsModal";
 
 const NavbarRoot = styled.div`
   display: flex;
@@ -50,28 +51,31 @@ const NavbarListItem = styled.div`
 `;
 
 function Navbar() {
-  const { handleSignOut, navBarOpen, setnavBarOpen,setShowModal, setCurrentModal, }: globalContextTypes =
-    useContext(GlobalContext);
-    const openProfileModal = () => {
-      setShowModal(true);
-      setCurrentModal(
-        <Modal>
-          <ProfileModal/>
-        </Modal>
-      );
-    };
+  const {
+    handleSignOut,
+    navBarOpen,
+    setnavBarOpen,
+    setShowModal,
+    setCurrentModal,
+  }: globalContextTypes = useContext(GlobalContext);
+  const openProfileModal = () => {
+    setShowModal(true);
+    setCurrentModal(
+      <Modal>
+        <ProfileModal />
+      </Modal>
+    );
+  };
 
-    const openSettingsModal = () => {
-      setShowModal(true);
-      setCurrentModal(
-        <Modal>
-          <ProfileModal/>
-        </Modal>
-      );
-    };
+  const openSettingsModal = () => {
+    setShowModal(true);
+    setCurrentModal(
+      <Modal>
+        <SettingsModal />
+      </Modal>
+    );
+  };
 
-
-    
   return (
     <NavbarRoot>
       <NavbarToggle
@@ -84,11 +88,11 @@ function Navbar() {
       </NavbarToggle>
       {navBarOpen ? (
         <NavbarList>
-          <NavbarListItem>
-            <FiUser size="1.75em" onClick={openProfileModal}/>
+          <NavbarListItem onClick={openProfileModal}>
+            <FiUser size="1.75em" />
           </NavbarListItem>
-          <NavbarListItem>
-            <GrSettingsOption size="1.75em" onClick={openSettingsModal} />
+          <NavbarListItem onClick={openSettingsModal}>
+            <GrSettingsOption size="1.75em" />
           </NavbarListItem>
           <NavbarListItem>
             <GrLogout onClick={handleSignOut} size="1.75em" />

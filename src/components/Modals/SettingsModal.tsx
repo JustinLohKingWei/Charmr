@@ -9,10 +9,25 @@ const SettingsModalRoot = styled.div`
   max-width: 90%;
   min-height: 3em;
   max-height: 90vh;
-  background-color: #000000
+  background-color: #ffffff;
   flex-direction: column;
   align-items: center;
-  justify-content:center;
+  justify-content: center;
+`;
+
+const SettingsModalTitle = styled.div`
+  display: flex;
+  width: 100%;
+  font-size: x-large;
+  justify-content: center;
+  padding: 1em 0 1em 0;
+`;
+
+const Settings = styled.div`
+  display: flex
+  width: 100%;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 `;
 
 const ModalCloseButton = styled.button`
@@ -37,6 +52,17 @@ function SettingsModal() {
   const { setShowModal }: globalContextTypes = useContext(GlobalContext);
   return (
     <SettingsModalRoot>
+      <SettingsModalTitle>Application Settings</SettingsModalTitle>
+      <Settings>
+        <>
+          <input type="radio" name="my-input" id="yes" value="yes" /> Dark Mode
+        </>
+
+        <>
+          <input type="radio" name="my-input" id="yes" value="yes" /> Light Mode
+        </>
+      </Settings>
+
       <ModalCloseButton
         onClick={() => {
           setShowModal(false);

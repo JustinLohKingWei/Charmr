@@ -9,10 +9,26 @@ const ProfileModalRoot = styled.div`
   max-width: 90%;
   min-height: 3em;
   max-height: 90vh;
-  background-color: #000000
+  background-color: #ffffff;
+  border-color: #000000;
   flex-direction: column;
   align-items: center;
-  justify-content:center;
+  justify-content: center;
+`;
+
+const ProfileModalTitle = styled.div`
+  display: flex;
+  width: 100%;
+  font-size: x-large;
+  justify-content: center;
+  padding: 1em 0 0 0;
+`;
+
+const Preferences = styled.div`
+  display: flex
+  width: 100%;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 `;
 
 const ModalCloseButton = styled.button`
@@ -35,10 +51,30 @@ const ModalCloseButton = styled.button`
 
 function ProfileModal() {
   const { setShowModal }: globalContextTypes = useContext(GlobalContext);
-  return <ProfileModalRoot><ModalCloseButton
-  onClick={() => {
-    setShowModal(false);
-  }}>Close</ModalCloseButton></ProfileModalRoot>;
+  return (
+    <ProfileModalRoot>
+      <ProfileModalTitle>Profile and Preferences</ProfileModalTitle>
+      <h2>John Doe</h2>
+      <Preferences>
+        <>
+          <input type="radio" name="my-input" id="yes" value="yes" /> Boys
+        </>
+        <>
+          <input type="radio" name="my-input" id="yes" value="yes" /> Girls
+        </>
+        <>
+          <input type="radio" name="my-input" id="yes" value="yes" /> Other
+        </>
+      </Preferences>
+      <ModalCloseButton
+        onClick={() => {
+          setShowModal(false);
+        }}
+      >
+        Close
+      </ModalCloseButton>
+    </ProfileModalRoot>
+  );
 }
 
 export default ProfileModal;

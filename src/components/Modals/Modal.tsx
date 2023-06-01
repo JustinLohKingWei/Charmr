@@ -6,7 +6,7 @@ const ModalRoot = styled.div`
   min-height: 100vh;
   min-width: 100vw;
   z-index: 999;
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(255, 255, 255, 0.698);
   justify-content: center;
   align-items: center;
 `;
