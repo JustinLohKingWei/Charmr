@@ -12,6 +12,7 @@ import {
 import Login from "./pages/Login";
 import { createContext, useState } from "react";
 import Home from "./pages/Home";
+import Modal from "./components/Modals/Modal";
 
 const firebaseapp = initializeApp({
   apiKey: "AIzaSyB00osssVi--HNQGI8e6hhA2CE0o8fj9xs",
@@ -34,12 +35,18 @@ export type globalContextTypes = {
   setnavBarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   maskerDisplay: boolean;
   setmaskerDisplay: React.Dispatch<React.SetStateAction<boolean>>;
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  currentModal: JSX.Element;
+  setCurrentModal: React.Dispatch<React.SetStateAction<JSX.Element>>;
 };
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [navBarOpen, setnavBarOpen] = useState(false);
   const [maskerDisplay, setmaskerDisplay] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [currentModal, setCurrentModal] = useState(<Modal />);
 
   const handleSignIn = () => {
     signInWithPopup(auth, provider)
@@ -64,12 +71,23 @@ function App() {
     handleSignOut: handleSignOut,
     navBarOpen: navBarOpen,
     setnavBarOpen: setnavBarOpen,
-    maskerDisplay:maskerDisplay,
-    setmaskerDisplay:setmaskerDisplay,
+    maskerDisplay: maskerDisplay,
+    setmaskerDisplay: setmaskerDisplay,
+    showModal,
+    setShowModal,
+    currentModal,
+    setCurrentModal,
   };
   return (
     <GlobalContext.Provider value={globalContextValues}>
-      {user ? <Home /> : <Login handleSignIn={handleSignIn} />}
+      {user ? (
+        <>
+          {showModal ? currentModal : <></>}
+          <Home></Home>
+        </>
+      ) : (
+        <Login handleSignIn={handleSignIn} />
+      )}
     </GlobalContext.Provider>
   );
 }

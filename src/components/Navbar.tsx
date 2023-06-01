@@ -4,6 +4,8 @@ import { useContext } from "react";
 import { GoThreeBars } from "react-icons/go";
 import { GrLogout, GrSettingsOption } from "react-icons/gr";
 import { FiUser } from "react-icons/fi";
+import ProfileModal from "./Modals/ProfileModal";
+import Modal from "./Modals/Modal";
 
 const NavbarRoot = styled.div`
   display: flex;
@@ -48,8 +50,28 @@ const NavbarListItem = styled.div`
 `;
 
 function Navbar() {
-  const { handleSignOut, navBarOpen, setnavBarOpen }: globalContextTypes =
+  const { handleSignOut, navBarOpen, setnavBarOpen,setShowModal, setCurrentModal, }: globalContextTypes =
     useContext(GlobalContext);
+    const openProfileModal = () => {
+      setShowModal(true);
+      setCurrentModal(
+        <Modal>
+          <ProfileModal/>
+        </Modal>
+      );
+    };
+
+    const openSettingsModal = () => {
+      setShowModal(true);
+      setCurrentModal(
+        <Modal>
+          <ProfileModal/>
+        </Modal>
+      );
+    };
+
+
+    
   return (
     <NavbarRoot>
       <NavbarToggle
@@ -63,10 +85,10 @@ function Navbar() {
       {navBarOpen ? (
         <NavbarList>
           <NavbarListItem>
-            <FiUser size="1.75em" />
+            <FiUser size="1.75em" onClick={openProfileModal}/>
           </NavbarListItem>
           <NavbarListItem>
-            <GrSettingsOption size="1.75em" />
+            <GrSettingsOption size="1.75em" onClick={openSettingsModal} />
           </NavbarListItem>
           <NavbarListItem>
             <GrLogout onClick={handleSignOut} size="1.75em" />
