@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import styled from "styled-components";
 import { globalContextTypes, GlobalContext, db } from "../../App";
-import { Chat} from "../../data/ChatData";
+import { Chat } from "../../data/ChatData";
 import { getDocs, collection, addDoc } from "firebase/firestore";
 
 const MaskerRoot = styled.div`
@@ -33,8 +33,12 @@ const MaskerButton = styled.button`
 `;
 
 function Masker() {
-  const { setmaskerDisplay, user, setcurrentChat }: globalContextTypes =
-    useContext(GlobalContext);
+  const {
+    setmaskerDisplay,
+    user,
+    currentChat,
+    setcurrentChat,
+  }: globalContextTypes = useContext(GlobalContext);
   const [loading, setloading] = useState(false);
 
   const handleChatSearch = async () => {
@@ -57,7 +61,6 @@ function Masker() {
       const chatRef = await addDoc(collection(db, "chats"), {
         users: users,
       });
-      alert("New Chat created");
 
       const newChat: Chat = {
         users: users,
@@ -66,7 +69,6 @@ function Masker() {
 
       setcurrentChat(newChat);
     } catch (error) {
-      alert("Error in creating chat");
       console.log(error);
     }
     setloading(false);

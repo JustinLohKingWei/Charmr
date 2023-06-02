@@ -31,7 +31,8 @@ type MessageType = {
   message: string;
 };
 function ChatBox() {
-  const { maskerDisplay, user }: globalContextTypes = useContext(GlobalContext);
+  const { maskerDisplay, user, currentChat }: globalContextTypes =
+    useContext(GlobalContext);
   const [messages, setMessages] = useState<MessageType[]>([]);
 
   useEffect(() => {
@@ -39,11 +40,13 @@ function ChatBox() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const updatedChats: MessageType[] = [];
       snapshot.forEach((doc) => {
-        if (doc.data().userUid === user?.uid) {
-          //important to make sure this matches the fields on the console
-          updatedChats.push({ isUser: true, message: doc.data().text });
-        } else {
-          updatedChats.push({ isUser: false, message: doc.data().text });
+        if (doc.data().chatUid === currentChat?.uid) {
+          if (doc.data().userUid === user?.uid) {
+            //important to make sure this matches the fields on the console
+            updatedChats.push({ isUser: true, message: doc.data().text });
+          } else {
+            updatedChats.push({ isUser: false, message: doc.data().text });
+          }
         }
       });
       setMessages(updatedChats);
@@ -51,7 +54,7 @@ function ChatBox() {
 
     // Cleanup the subscription
     return () => unsubscribe();
-  }, []);
+  }, [currentChat]);
 
   if (maskerDisplay) {
     return <Masker />;
