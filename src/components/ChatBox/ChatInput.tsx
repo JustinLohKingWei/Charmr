@@ -1,7 +1,7 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import styled from "styled-components";
-import { auth, db } from "../../App";
+import { GlobalContext, auth, db, globalContextTypes } from "../../App";
 
 const ChatInputRoot = styled.div`
   display: flex;
@@ -19,6 +19,7 @@ const InputBox = styled.input`
 `;
 
 function ChatInput() {
+  const { currentChat }: globalContextTypes = useContext(GlobalContext);
   const inputRef = useRef<HTMLInputElement>(null);
   const messageRef = collection(db, "messages");
   const [currentMessage, setCurrentMessage] = useState("");
@@ -30,6 +31,7 @@ function ChatInput() {
       createdAt: serverTimestamp(),
       user: auth.currentUser?.displayName,
       userUid: auth.currentUser?.uid,
+      chatUid:currentChat?.uid?? " ",
     });
     setCurrentMessage("");
     if (inputRef.current) {

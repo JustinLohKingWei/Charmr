@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import styled from "styled-components";
 import { globalContextTypes, GlobalContext, db } from "../../App";
-import { SearchForMatch } from "../../data/ChatData";
+import { Chat} from "../../data/ChatData";
 import { getDocs, collection, addDoc } from "firebase/firestore";
 
 const MaskerRoot = styled.div`
@@ -33,7 +33,7 @@ const MaskerButton = styled.button`
 `;
 
 function Masker() {
-  const { setmaskerDisplay, user }: globalContextTypes =
+  const { setmaskerDisplay, user, setcurrentChat }: globalContextTypes =
     useContext(GlobalContext);
   const [loading, setloading] = useState(false);
 
@@ -44,7 +44,7 @@ function Masker() {
 
       // Get an array of user IDs
       const userIds = usersSnapshot.docs.map((doc) => doc.id);
-      
+
       const randomIndex = Math.floor(Math.random() * userIds.length);
 
       // Get the randomly selected user ID
@@ -52,12 +52,19 @@ function Masker() {
 
       console.log("ID IS" + selectedUserId);
 
-      const users = [selectedUserId, user?.uid];
+      const users: string[] = [selectedUserId, user?.uid ?? "someone"];
 
-      await addDoc(collection(db, "chats"), {
+      const chatRef = await addDoc(collection(db, "chats"), {
         users: users,
       });
       alert("New Chat created");
+
+      const newChat: Chat = {
+        users: users,
+        uid: chatRef.id,
+      };
+
+      setcurrentChat(newChat);
     } catch (error) {
       alert("Error in creating chat");
       console.log(error);
