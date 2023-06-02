@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import {
   getAuth,
   signInWithPopup,
@@ -48,10 +48,26 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(<Modal />);
 
-  const handleSignIn = () => {
+  const handleAddUser = async (uid: string, displayName?: string) => {
+    const userRef = doc(db, "users", uid);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      const userData = {
+        displayName,
+      };
+
+      await setDoc(userRef, userData);
+    }
+  };
+
+  const handleSignIn = async () => {
     signInWithPopup(auth, provider)
       .then((result: UserCredential) => {
         setUser(result.user);
+
+        const { uid, displayName } = result.user;
+        handleAddUser(uid, displayName ?? "No name found");
       })
       .catch((error) => {
         console.log(error);
