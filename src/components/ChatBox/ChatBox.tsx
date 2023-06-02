@@ -38,14 +38,15 @@ function ChatBox() {
   useEffect(() => {
 
     const q = query(collection(db, 'messages'), orderBy('createdAt'));
-    // Subscribe to the 'messages' collection
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const updatedChats: Message[] = [];
       snapshot.forEach((doc) => {
-        if (doc.data().uid === user?.uid) {
-          updatedChats.push({ isUser: true, message: doc.data().message });
+        if (doc.data().userUid === user?.uid) {
+          //important to make sure this matches the fields on the console
+          updatedChats.push({ isUser: true, message: doc.data().text });
+        }else{
+          updatedChats.push({ isUser: false, message: doc.data().text});
         }
-        updatedChats.push({ isUser: true, message: doc.data().text });
       });
       setMessages(updatedChats);
     });
