@@ -29,6 +29,7 @@ function ChatInput() {
       text: currentMessage,
       createdAt: serverTimestamp(),
       user: auth.currentUser?.displayName,
+      userUid: auth.currentUser?.uid,
     });
     setCurrentMessage("");
     if (inputRef.current) {

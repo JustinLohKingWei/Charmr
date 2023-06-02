@@ -39,6 +39,8 @@ export type globalContextTypes = {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   currentModal: JSX.Element;
   setCurrentModal: React.Dispatch<React.SetStateAction<JSX.Element>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 function App() {
@@ -94,6 +96,8 @@ function App() {
     setShowModal,
     currentModal,
     setCurrentModal,
+    user,
+    setUser,
   };
   return (
     <GlobalContext.Provider value={globalContextValues}>

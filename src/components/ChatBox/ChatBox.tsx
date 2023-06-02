@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import Message from "./Message";
-import { realTestConvo } from "../../data/MessageData";
 import Masker from "./Masker";
 import ChatInput from "./ChatInput";
-import { useContext } from "react";
-import { globalContextTypes, GlobalContext } from "../../App";
+import { useContext, useEffect, useState } from "react";
+import { globalContextTypes, GlobalContext, db } from "../../App";
+import "firebase/firestore";
+import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
 const ChatBoxRoot = styled.div`
   display: flex;
   height: 95%;
@@ -26,15 +27,40 @@ const ChatDisplay = styled.div`
   flex-direction: column;
 `;
 
+type Message = {
+  isUser: boolean;
+  message: string;
+};
 function ChatBox() {
-  const { maskerDisplay }: globalContextTypes = useContext(GlobalContext);
+  const { maskerDisplay, user }: globalContextTypes = useContext(GlobalContext);
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+
+    const q = query(collection(db, 'messages'), orderBy('createdAt'));
+    // Subscribe to the 'messages' collection
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const updatedChats: Message[] = [];
+      snapshot.forEach((doc) => {
+        if (doc.data().uid === user?.uid) {
+          updatedChats.push({ isUser: true, message: doc.data().message });
+        }
+        updatedChats.push({ isUser: true, message: doc.data().text });
+      });
+      setMessages(updatedChats);
+    });
+
+    // Cleanup the subscription
+    return () => unsubscribe();
+  }, []);
+
   if (maskerDisplay) {
     return <Masker />;
   } else
     return (
       <ChatBoxRoot>
         <ChatDisplay>
-          {realTestConvo.map((data) => {
+          {messages.map((data) => {
             return <Message isUser={data.isUser} message={data.message} />;
           })}
         </ChatDisplay>

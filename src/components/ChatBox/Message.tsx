@@ -13,7 +13,7 @@ const CurrentUserMessageBox = styled.div`
   margin-left: auto;
   border-radius: 0.2em;
   flex-wrap: wrap;
-  max-width:40%
+  max-width: 40%;
 `;
 
 const OtherUserMessageBox = styled.div`
@@ -22,7 +22,7 @@ const OtherUserMessageBox = styled.div`
   padding: 0.5em;
   border-radius: 0.5em;
   flex-wrap: wrap;
-  max-width:40%
+  max-width: 40%;
 `;
 
 type MessageProps = {
