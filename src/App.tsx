@@ -54,6 +54,7 @@ function App() {
 
     if (!userDoc.exists()) {
       const userData = {
+        uid,
         displayName,
       };
 
