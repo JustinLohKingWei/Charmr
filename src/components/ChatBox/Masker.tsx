@@ -1,6 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
-import { globalContextTypes, GlobalContext } from "../../App";
+import { globalContextTypes, GlobalContext, db } from "../../App";
+import { SearchForMatch } from "../../data/ChatData";
+import { getDocs, collection, addDoc } from "firebase/firestore";
 
 const MaskerRoot = styled.div`
   display: flex;
@@ -31,16 +33,52 @@ const MaskerButton = styled.button`
 `;
 
 function Masker() {
-  const { setmaskerDisplay }: globalContextTypes = useContext(GlobalContext);
+  const { setmaskerDisplay, user }: globalContextTypes =
+    useContext(GlobalContext);
+  const [loading, setloading] = useState(false);
+
+  const handleChatSearch = async () => {
+    setloading(true);
+    try {
+      const usersSnapshot = await getDocs(collection(db, "users"));
+
+      // Get an array of user IDs
+      const userIds = usersSnapshot.docs.map((doc) => doc.id);
+      
+      const randomIndex = Math.floor(Math.random() * userIds.length);
+
+      // Get the randomly selected user ID
+      const selectedUserId = userIds[randomIndex];
+
+      console.log("ID IS" + selectedUserId);
+
+      const users = [selectedUserId, user?.uid];
+
+      await addDoc(collection(db, "chats"), {
+        users: users,
+      });
+      alert("New Chat created");
+    } catch (error) {
+      alert("Error in creating chat");
+      console.log(error);
+    }
+    setloading(false);
+  };
+
   return (
     <MaskerRoot>
-      <MaskerButton
-        onClick={() => {
-          setmaskerDisplay(false);
-        }}
-      >
-        Meet Someone New Now!
-      </MaskerButton>
+      {loading ? (
+        <>Loading</>
+      ) : (
+        <MaskerButton
+          onClick={() => {
+            handleChatSearch();
+            setmaskerDisplay(false);
+          }}
+        >
+          Meet Someone New Now!
+        </MaskerButton>
+      )}
     </MaskerRoot>
   );
 }

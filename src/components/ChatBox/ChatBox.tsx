@@ -4,7 +4,6 @@ import Masker from "./Masker";
 import ChatInput from "./ChatInput";
 import { useContext, useEffect, useState } from "react";
 import { globalContextTypes, GlobalContext, db } from "../../App";
-import "firebase/firestore";
 import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
 const ChatBoxRoot = styled.div`
   display: flex;
@@ -27,25 +26,24 @@ const ChatDisplay = styled.div`
   flex-direction: column;
 `;
 
-type Message = {
+type MessageType = {
   isUser: boolean;
   message: string;
 };
 function ChatBox() {
   const { maskerDisplay, user }: globalContextTypes = useContext(GlobalContext);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
 
   useEffect(() => {
-
-    const q = query(collection(db, 'messages'), orderBy('createdAt'));
+    const q = query(collection(db, "messages"), orderBy("createdAt"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const updatedChats: Message[] = [];
+      const updatedChats: MessageType[] = [];
       snapshot.forEach((doc) => {
         if (doc.data().userUid === user?.uid) {
           //important to make sure this matches the fields on the console
           updatedChats.push({ isUser: true, message: doc.data().text });
-        }else{
-          updatedChats.push({ isUser: false, message: doc.data().text});
+        } else {
+          updatedChats.push({ isUser: false, message: doc.data().text });
         }
       });
       setMessages(updatedChats);

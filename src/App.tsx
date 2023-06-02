@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import { createContext, useState } from "react";
 import Home from "./pages/Home";
 import Modal from "./components/Modals/Modal";
+import { Chat } from "./data/ChatData";
 
 const firebaseapp = initializeApp({
   apiKey: "AIzaSyB00osssVi--HNQGI8e6hhA2CE0o8fj9xs",
@@ -41,6 +42,8 @@ export type globalContextTypes = {
   setCurrentModal: React.Dispatch<React.SetStateAction<JSX.Element>>;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  currentChat: Chat | null;
+  setcurrentChat: React.Dispatch<React.SetStateAction<Chat | null>>;
 };
 
 function App() {
@@ -49,6 +52,7 @@ function App() {
   const [maskerDisplay, setmaskerDisplay] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [currentModal, setCurrentModal] = useState(<Modal />);
+  const [currentChat, setcurrentChat] = useState<Chat | null>(null);
 
   const handleAddUser = async (uid: string, displayName?: string) => {
     const userRef = doc(db, "users", uid);
@@ -98,6 +102,8 @@ function App() {
     setCurrentModal,
     user,
     setUser,
+    currentChat,
+    setcurrentChat,
   };
   return (
     <GlobalContext.Provider value={globalContextValues}>
