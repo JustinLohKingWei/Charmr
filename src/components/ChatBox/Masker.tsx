@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import styled from "styled-components";
 import { globalContextTypes, GlobalContext, db } from "../../App";
 import { Chat } from "../../data/ChatData";
-import { getDocs, collection, addDoc } from "firebase/firestore";
+import { getDocs, collection, addDoc, query, where } from "firebase/firestore";
 
 const MaskerRoot = styled.div`
   display: flex;
@@ -33,12 +33,8 @@ const MaskerButton = styled.button`
 `;
 
 function Masker() {
-  const {
-    setmaskerDisplay,
-    user,
-    currentChat,
-    setcurrentChat,
-  }: globalContextTypes = useContext(GlobalContext);
+  const { setmaskerDisplay, user, setcurrentChat }: globalContextTypes =
+    useContext(GlobalContext);
   const [loading, setloading] = useState(false);
 
   const handleChatSearch = async () => {
@@ -52,22 +48,41 @@ function Masker() {
       const randomIndex = Math.floor(Math.random() * userIds.length);
 
       // Get the randomly selected user ID
-      const selectedUserId = userIds[randomIndex];
+      let selectedUserId = userIds[randomIndex];
 
-      console.log("ID IS" + selectedUserId);
+      while (selectedUserId === user?.uid) {
+        const anotherRandomIndex = Math.floor(Math.random() * userIds.length);
+        selectedUserId = userIds[anotherRandomIndex];
+      }
+      console.log("Final ID is" + selectedUserId);
 
       const users: string[] = [selectedUserId, user?.uid ?? "someone"];
 
-      const chatRef = await addDoc(collection(db, "chats"), {
-        users: users,
-      });
+      const isDuplicate = async (users: string[]) => {
+        const chatCollectionRef = collection(db, "chats"); // Replace 'chats' with your collection name
 
-      const newChat: Chat = {
-        users: users,
-        uid: chatRef.id,
+        // Create a query to check if a chat with the same set of users already exists
+        const q = query(chatCollectionRef, where("users", "==", users));
+
+        const snapshot = await getDocs(q);
+
+        return !snapshot.empty;
       };
 
-      setcurrentChat(newChat);
+      if (!(await isDuplicate(users))) {
+        const chatRef = await addDoc(collection(db, "chats"), {
+          users: users,
+        });
+
+        const newChat: Chat = {
+          users: users,
+          uid: chatRef.id,
+        };
+
+        setcurrentChat(newChat);
+      } else {
+        alert("Chat Already Exists, Cannot Create chat with this user");
+      }
     } catch (error) {
       console.log(error);
     }
