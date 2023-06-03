@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import { MdFace } from "react-icons/md";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { useContext, useEffect } from "react";
+import { globalContextTypes, GlobalContext, db } from "../App";
+import { Chat } from "../data/ChatData";
 
 const ContactRoot = styled.div`
   display: flex;
@@ -32,12 +36,47 @@ const ContactInfo = styled.div`
 `;
 
 type ContactProps = {
-    name:String
-}
+  name: string;
+};
 
-function Contact({name}:ContactProps) {
+function Contact({ name }: ContactProps) {
+  const { user, setcurrentChat, setmaskerDisplay }: globalContextTypes =
+    useContext(GlobalContext);
+  const fetchChat = async () => {
+    try {
+      const chatsRef = collection(db, "chats");
+      const q = query(chatsRef, where("users", "array-contains", user?.uid));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        let chatData = null;
+        querySnapshot.forEach((doc) => {
+          const chatIterator = doc.data() as Chat;
+          if (chatIterator.users.includes(name)) {
+            chatData = chatIterator;
+          }
+        });
+
+        alert("Chatfound");
+        // const chatData = querySnapshot.docs[0].data() as Chat;
+        setcurrentChat(chatData);
+      } else {
+        // No chat found with both users
+        // alert("NoChatFound");
+        setcurrentChat(null);
+      }
+    } catch (error: any) {
+      console.error("Error fetching chat:", error);
+    }
+    setmaskerDisplay(false);
+  };
+
   return (
-    <ContactRoot>
+    <ContactRoot
+      onClick={async () => {
+        await fetchChat();
+      }}
+    >
       <ContactImage>
         <MdFace size="2.5em" />
       </ContactImage>

@@ -15,9 +15,15 @@ const ChatBoxRoot = styled.div`
   align-items: center;
 `;
 
+const ChatHeader = styled.div`
+  display: flex;
+  height: 3em;
+  align-items: center;
+`;
+
 const ChatDisplay = styled.div`
   display: flex;
-  height: 48em;
+  height: 45em;
   width: 95%;
   border: 0.1em solid rgba(255, 255, 255, 0.5);
   margin: 1em 0 1em 0;
@@ -56,11 +62,17 @@ function ChatBox() {
     return () => unsubscribe();
   }, [currentChat]);
 
+  let OppUser = currentChat?.users[0];
+
   if (maskerDisplay) {
     return <Masker />;
-  } else
+  } else {
+    if (currentChat?.users[0] === user?.uid) {
+      OppUser = currentChat?.users[1];
+    }
     return (
       <ChatBoxRoot>
+        <ChatHeader>{"Chatting With User " + OppUser}</ChatHeader>
         <ChatDisplay>
           {messages.map((data) => {
             return <Message isUser={data.isUser} message={data.message} />;
@@ -69,6 +81,7 @@ function ChatBox() {
         <ChatInput />
       </ChatBoxRoot>
     );
+  }
 }
 
 export default ChatBox;

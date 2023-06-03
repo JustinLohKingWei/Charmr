@@ -57,11 +57,13 @@ function App() {
   const handleAddUser = async (uid: string, displayName?: string) => {
     const userRef = doc(db, "users", uid);
     const userDoc = await getDoc(userRef);
+    const contactList: String[] = [];
 
     if (!userDoc.exists()) {
       const userData = {
         uid,
         displayName,
+        contactList,
       };
 
       await setDoc(userRef, userData);

@@ -2,7 +2,15 @@ import { useContext, useState } from "react";
 import styled from "styled-components";
 import { globalContextTypes, GlobalContext, db } from "../../App";
 import { Chat } from "../../data/ChatData";
-import { getDocs, collection, addDoc, query, where } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  addDoc,
+  doc,
+  arrayUnion,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
 
 const MaskerRoot = styled.div`
   display: flex;
@@ -42,12 +50,10 @@ function Masker() {
     try {
       const usersSnapshot = await getDocs(collection(db, "users"));
 
-      // Get an array of user IDs
       const userIds = usersSnapshot.docs.map((doc) => doc.id);
 
       const randomIndex = Math.floor(Math.random() * userIds.length);
 
-      // Get the randomly selected user ID
       let selectedUserId = userIds[randomIndex];
 
       while (selectedUserId === user?.uid) {
@@ -58,18 +64,17 @@ function Masker() {
 
       const users: string[] = [selectedUserId, user?.uid ?? "someone"];
 
-      const isDuplicate = async (users: string[]) => {
-        const chatCollectionRef = collection(db, "chats"); // Replace 'chats' with your collection name
+      const isDuplicate = async (uid: string) => {
+        const usersRef = collection(db, "users"); // Replace 'chats' with your collection name
 
-        // Create a query to check if a chat with the same set of users already exists
-        const q = query(chatCollectionRef, where("users", "==", users));
+        const currentUserDocRef = doc(usersRef, user?.uid);
+        const currentUserDocSnapshot = await getDoc(currentUserDocRef);
+        const contactList = currentUserDocSnapshot.get("contactList");
 
-        const snapshot = await getDocs(q);
-
-        return !snapshot.empty;
+        return contactList.includes(uid);
       };
 
-      if (!(await isDuplicate(users))) {
+      if (!(await isDuplicate(selectedUserId))) {
         const chatRef = await addDoc(collection(db, "chats"), {
           users: users,
         });
@@ -80,6 +85,30 @@ function Masker() {
         };
 
         setcurrentChat(newChat);
+
+        const userRef = doc(db, "users", user?.uid ?? "");
+
+        updateDoc(userRef, {
+          contactList: arrayUnion(selectedUserId),
+        })
+          .then(() => {
+            console.log("Contact added successfully");
+          })
+          .catch((error) => {
+            console.error("Error adding contact:", error);
+          });
+
+        const otherUserRef = doc(db, "users", selectedUserId);
+
+        updateDoc(otherUserRef, {
+          contactList: arrayUnion(user?.uid ?? ""),
+        })
+          .then(() => {
+            console.log("Contact added successfully");
+          })
+          .catch((error) => {
+            console.error("Error adding contact:", error);
+          });
       } else {
         alert("Chat Already Exists, Cannot Create chat with this user");
       }
