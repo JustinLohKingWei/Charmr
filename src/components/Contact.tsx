@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { MdFace } from "react-icons/md";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { globalContextTypes, GlobalContext, db } from "../App";
 import { Chat } from "../data/ChatData";
 
@@ -56,13 +56,10 @@ function Contact({ name }: ContactProps) {
             chatData = chatIterator;
           }
         });
-
-        alert("Chatfound");
-        // const chatData = querySnapshot.docs[0].data() as Chat;
+        console.log("Chat data is");
+        console.log(chatData);
         setcurrentChat(chatData);
       } else {
-        // No chat found with both users
-        // alert("NoChatFound");
         setcurrentChat(null);
       }
     } catch (error: any) {

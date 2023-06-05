@@ -47,6 +47,7 @@ function ChatBox() {
       const updatedChats: MessageType[] = [];
       snapshot.forEach((doc) => {
         if (doc.data().chatUid === currentChat?.uid) {
+          
           if (doc.data().userUid === user?.uid) {
             //important to make sure this matches the fields on the console
             updatedChats.push({ isUser: true, message: doc.data().text });
@@ -72,7 +73,7 @@ function ChatBox() {
     }
     return (
       <ChatBoxRoot>
-        <ChatHeader>{"Chatting With User " + OppUser}</ChatHeader>
+        <ChatHeader>{"Chatting With User " + OppUser + "Current Chat ID"+currentChat?.uid}</ChatHeader>
         <ChatDisplay>
           {messages.map((data) => {
             return <Message isUser={data.isUser} message={data.message} />;

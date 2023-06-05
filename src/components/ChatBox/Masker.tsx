@@ -84,6 +84,8 @@ function Masker() {
           uid: chatRef.id,
         };
 
+        await updateDoc(chatRef, { uid: chatRef.id });
+
         setcurrentChat(newChat);
 
         const userRef = doc(db, "users", user?.uid ?? "");
