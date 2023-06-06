@@ -36,9 +36,11 @@ This application features a google login system, and can currently support a ran
 1. While initial styling is done, further work is needed on the UI login page and chat header
 2. An upcoming tracking of user preferences such as hobbies, and chat partner preferences are also to be included
 3. Integrate a Django Backend.
+4. Properly use user display names instead of their unique hashes
 
 ### Bugs
 
 | Bug  | Notes      | Status |
 | ---- | ---------- | ------ |
-| Firebase requests generate too much reads for a daily quota | This should be able to fixed by increasing local storage data in order to stop making too many requests | ongoing |
+| Firebase requests generate too much reads for a daily quota | This should be able to fixed by creating a local data structure in order to stop making too many requests | ongoing |
+| Display names are often failed to be fetched | Might be a request error, or redoing the user collection would help | ongoing |

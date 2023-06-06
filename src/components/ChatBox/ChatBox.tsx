@@ -4,7 +4,14 @@ import Masker from "./Masker";
 import ChatInput from "./ChatInput";
 import { useContext, useEffect, useState } from "react";
 import { globalContextTypes, GlobalContext, db } from "../../App";
-import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
+import {
+  onSnapshot,
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  where,
+} from "firebase/firestore";
 const ChatBoxRoot = styled.div`
   display: flex;
   height: 95%;
@@ -47,7 +54,6 @@ function ChatBox() {
       const updatedChats: MessageType[] = [];
       snapshot.forEach((doc) => {
         if (doc.data().chatUid === currentChat?.uid) {
-          
           if (doc.data().userUid === user?.uid) {
             //important to make sure this matches the fields on the console
             updatedChats.push({ isUser: true, message: doc.data().text });
@@ -63,17 +69,35 @@ function ChatBox() {
     return () => unsubscribe();
   }, [currentChat]);
 
-  let OppUser = currentChat?.users[0];
+  let OppUserID = currentChat?.users[0];
 
   if (maskerDisplay) {
     return <Masker />;
   } else {
     if (currentChat?.users[0] === user?.uid) {
-      OppUser = currentChat?.users[1];
+      OppUserID = currentChat?.users[1];
     }
+
+    const usersCollection = collection(db, "users");
+    const userQuery = query(usersCollection, where("uid", "==", OppUserID));
+    let OppUserName = "";
+    getDocs(userQuery)
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          const displayName = userDoc.data().displayName as string;
+          OppUserName = displayName;
+        } else {
+          console.log("User not found");
+        }
+      })
+      .catch((error) => {
+        console.error("Error retrieving user:", error);
+      });
+
     return (
       <ChatBoxRoot>
-        <ChatHeader>{"Chatting With User " + OppUser + "Current Chat ID"+currentChat?.uid}</ChatHeader>
+        <ChatHeader>{"Chatting With User " + OppUserName}</ChatHeader>
         <ChatDisplay>
           {messages.map((data) => {
             return <Message isUser={data.isUser} message={data.message} />;
